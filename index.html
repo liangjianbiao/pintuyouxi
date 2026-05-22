@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>拼图小游戏</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="game-container">
+        <header class="game-header">
+            <div class="header-left">
+                <span class="game-title">🧩 拼图小游戏</span>
+            </div>
+            <div class="header-center">
+                <span class="level-info">第 <span id="current-level">1</span> / 3 关</span>
+            </div>
+            <div class="header-right">
+                <button id="btn-restart" class="btn btn-secondary">重新开始</button>
+            </div>
+        </header>
+
+        <main class="game-main">
+            <div class="game-boards">
+                <div class="puzzle-board">
+                    <h3>拼图区域</h3>
+                    <div id="puzzle-container" class="puzzle-container">
+                        <canvas id="puzzle-canvas"></canvas>
+                    </div>
+                    <div class="progress-bar">
+                        <div class="progress-fill" id="progress"></div>
+                    </div>
+                </div>
+                <div class="preview-board">
+                    <h3>原图预览</h3>
+                    <div class="preview-container">
+                        <img id="preview-image" alt="原图预览">
+                    </div>
+                </div>
+            </div>
+            
+            <div class="game-info">
+                <div class="info-item">
+                    <span class="info-icon">👣</span>
+                    <span class="info-label">步数</span>
+                    <span class="info-value" id="steps">0</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-icon">⏱️</span>
+                    <span class="info-label">时间</span>
+                    <span class="info-value" id="time">00:00</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-icon">⭐</span>
+                    <span class="info-label">最佳</span>
+                    <span class="info-value" id="best">--</span>
+                </div>
+            </div>
+        </main>
+
+        <div class="game-controls">
+            <div class="action-btns">
+                <button id="btn-shuffle" class="btn btn-outline">打乱</button>
+                <button id="btn-hint" class="btn btn-primary">提示</button>
+                <button id="btn-solve" class="btn btn-secondary">自动完成</button>
+            </div>
+            <div class="tips">
+                <p>💡 操作提示：点击选择拼图块，再次点击交换位置；或使用方向键移动选中的拼图块</p>
+            </div>
+        </div>
+
+        <div class="message-overlay" id="message-overlay">
+            <div class="message-content">
+                <div class="message-icon" id="message-icon">🎉</div>
+                <div class="message-title" id="message-title">恭喜完成！</div>
+                <div class="message-text" id="message-text">太棒了！用了 0 步完成！</div>
+                <div class="message-stars" id="message-stars">⭐⭐⭐</div>
+                <button id="btn-next" class="btn btn-primary">下一关 →</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>

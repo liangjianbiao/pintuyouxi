@@ -1,0 +1,306 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+}
+
+.game-container {
+    background: white;
+    border-radius: 20px;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+    padding: 20px;
+    max-width: 700px;
+    width: 100%;
+}
+
+.game-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    padding-bottom: 15px;
+    border-bottom: 2px solid #eee;
+}
+
+.game-title {
+    font-size: 24px;
+    font-weight: bold;
+    color: #333;
+}
+
+.level-info {
+    font-size: 18px;
+    color: #666;
+}
+
+.level-info span {
+    color: #667eea;
+    font-weight: bold;
+}
+
+.btn {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.btn-primary {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+}
+
+.btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+}
+
+.btn-secondary {
+    background: #f0f0f0;
+    color: #333;
+}
+
+.btn-secondary:hover {
+    background: #e0e0e0;
+}
+
+.btn-outline {
+    background: transparent;
+    border: 2px solid #667eea;
+    color: #667eea;
+}
+
+.btn-outline:hover {
+    background: #667eea;
+    color: white;
+}
+
+.game-main {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 15px;
+}
+
+.game-boards {
+    display: flex;
+    gap: 30px;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.puzzle-board,
+.preview-board {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+}
+
+.puzzle-board h3,
+.preview-board h3 {
+    font-size: 16px;
+    color: #666;
+}
+
+.puzzle-container {
+    background: #f8f8f8;
+    border-radius: 12px;
+    padding: 10px;
+    display: flex;
+    justify-content: center;
+}
+
+.preview-container {
+    background: #f8f8f8;
+    border-radius: 12px;
+    padding: 10px;
+    display: flex;
+    justify-content: center;
+}
+
+#puzzle-canvas {
+    border-radius: 8px;
+    cursor: pointer;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+#preview-image {
+    max-width: 280px;
+    max-height: 280px;
+    border-radius: 8px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+.progress-bar {
+    width: 100%;
+    height: 8px;
+    background: #eee;
+    border-radius: 4px;
+    overflow: hidden;
+    margin-top: 10px;
+}
+
+.progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #4CAF50, #8BC34A);
+    border-radius: 4px;
+    transition: width 0.3s ease;
+}
+
+.game-info {
+    display: flex;
+    gap: 30px;
+}
+
+.info-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 5px;
+}
+
+.info-icon {
+    font-size: 24px;
+}
+
+.info-label {
+    font-size: 12px;
+    color: #888;
+}
+
+.info-value {
+    font-size: 18px;
+    font-weight: bold;
+    color: #333;
+}
+
+.game-controls {
+    margin-top: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 15px;
+}
+
+.action-btns {
+    display: flex;
+    gap: 10px;
+}
+
+.tips {
+    background: #fff3e0;
+    border-radius: 8px;
+    padding: 10px 20px;
+    text-align: center;
+}
+
+.tips p {
+    font-size: 13px;
+    color: #ff9800;
+    margin: 0;
+}
+
+.message-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.6);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.3s ease;
+}
+
+.message-overlay.show {
+    opacity: 1;
+    visibility: visible;
+}
+
+.message-content {
+    background: white;
+    border-radius: 20px;
+    padding: 40px;
+    text-align: center;
+    transform: scale(0.8);
+    transition: transform 0.3s ease;
+}
+
+.message-overlay.show .message-content {
+    transform: scale(1);
+}
+
+.message-icon {
+    font-size: 64px;
+    margin-bottom: 15px;
+}
+
+.message-title {
+    font-size: 28px;
+    font-weight: bold;
+    color: #333;
+    margin-bottom: 10px;
+}
+
+.message-text {
+    font-size: 16px;
+    color: #666;
+    margin-bottom: 15px;
+}
+
+.message-stars {
+    font-size: 32px;
+    margin-bottom: 20px;
+}
+
+@media (max-width: 768px) {
+    .game-container {
+        padding: 15px;
+    }
+
+    .game-header {
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .game-boards {
+        flex-direction: column;
+        gap: 15px;
+    }
+
+    .game-info {
+        gap: 20px;
+    }
+
+    .action-btns {
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+
+    .btn {
+        padding: 8px 16px;
+        font-size: 13px;
+    }
+
+    #preview-image {
+        max-width: 200px;
+        max-height: 200px;
+    }
+}
