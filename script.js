@@ -44,6 +44,10 @@ function setupEventListeners() {
     canvas.addEventListener('mouseup', handleMouseUp);
     canvas.addEventListener('mouseleave', handleMouseUp);
     
+    canvas.addEventListener('touchstart', handleTouchStart, { passive: true });
+    canvas.addEventListener('touchmove', handleTouchMove, { passive: true });
+    canvas.addEventListener('touchend', handleTouchEnd, { passive: true });
+    
     document.getElementById('btn-shuffle').addEventListener('click', shufflePuzzle);
     document.getElementById('btn-hint').addEventListener('click', showHint);
     document.getElementById('btn-solve').addEventListener('click', solvePuzzle);
@@ -111,6 +115,85 @@ function handleMouseUp(e) {
     
     isDragging = false;
     dragStartIndex = null;
+    drawPuzzle();
+}
+
+function handleTouchStart(e) {
+    const touch = e.touches[0];
+    const rect = canvas.getBoundingClientRect();
+    const scaleX = canvas.width / rect.width;
+    const scaleY = canvas.height / rect.height;
+    
+    const x = Math.floor((touch.clientX - rect.left) * scaleX / PIECES_SIZE);
+    const y = Math.floor((touch.clientY - rect.top) * scaleY / PIECES_SIZE);
+    
+    const index = y * GRID_SIZE + x;
+    
+    if (index >= 0 && index < PIECES) {
+        isDragging = true;
+        dragStartIndex = index;
+        selectedPiece = index;
+        drawPuzzle();
+    }
+}
+
+function handleTouchMove(e) {
+    if (!isDragging) return;
+    
+    const touch = e.touches[0];
+    const rect = canvas.getBoundingClientRect();
+    const scaleX = canvas.width / rect.width;
+    const scaleY = canvas.height / rect.height;
+    
+    const x = Math.floor((touch.clientX - rect.left) * scaleX / PIECES_SIZE);
+    const y = Math.floor((touch.clientY - rect.top) * scaleY / PIECES_SIZE);
+    
+    const index = y * GRID_SIZE + x;
+    
+    if (index >= 0 && index < PIECES && index !== dragStartIndex) {
+        selectedPiece = index;
+        drawPuzzle();
+    }
+}
+
+function handleTouchEnd(e) {
+    if (!isDragging || dragStartIndex === null) {
+        isDragging = false;
+        dragStartIndex = null;
+        drawPuzzle();
+        return;
+    }
+    
+    const rect = canvas.getBoundingClientRect();
+    const scaleX = canvas.width / rect.width;
+    const scaleY = canvas.height / rect.height;
+    
+    let touchX, touchY;
+    if (e.changedTouches && e.changedTouches.length > 0) {
+        touchX = e.changedTouches[0].clientX;
+        touchY = e.changedTouches[0].clientY;
+    } else {
+        isDragging = false;
+        dragStartIndex = null;
+        drawPuzzle();
+        return;
+    }
+    
+    const x = Math.floor((touchX - rect.left) * scaleX / PIECES_SIZE);
+    const y = Math.floor((touchY - rect.top) * scaleY / PIECES_SIZE);
+    
+    const index = y * GRID_SIZE + x;
+    
+    if (index >= 0 && index < PIECES && index !== dragStartIndex) {
+        swapPieces(dragStartIndex, index);
+        steps++;
+        updateUI();
+        checkCompletion();
+    }
+    
+    isDragging = false;
+    dragStartIndex = null;
+    selectedPiece = null;
     drawPuzzle();
 }
 
