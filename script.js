@@ -2,16 +2,17 @@ const GRID_SIZE = 4;
 const PIECES = GRID_SIZE * GRID_SIZE;
 const PIECES_SIZE = 70;
 
-const images = [
+const defaultImages = [
     'image.png',
     'image1.png',
     'image3.png'
 ];
 
+let images = [...defaultImages];
 let currentLevel = 0;
 let puzzlePieces = [];
 let selectedPiece = null;
-let steps = 0;
+let steps = 0; 
 let startTime = null;
 let timerInterval = null;
 let bestScores = {};
@@ -21,6 +22,7 @@ let previewImage = null;
 let currentImage = new Image();
 let isDragging = false;
 let dragStartIndex = null;
+let customImages = [];
 
 function initGame() {
     canvas = document.getElementById('puzzle-canvas');
@@ -47,6 +49,7 @@ function setupEventListeners() {
     document.getElementById('btn-solve').addEventListener('click', solvePuzzle);
     document.getElementById('btn-restart').addEventListener('click', restartGame);
     document.getElementById('btn-next').addEventListener('click', nextLevel);
+    document.getElementById('file-upload').addEventListener('change', handleFileUpload);
     
     document.addEventListener('keydown', handleKeyDown);
 }
@@ -108,7 +111,6 @@ function handleMouseUp(e) {
     
     isDragging = false;
     dragStartIndex = null;
-    selectedPiece = null;
     drawPuzzle();
 }
 
@@ -273,26 +275,32 @@ function isPuzzleComplete() {
 function drawPuzzle() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     
+    const imageSize = Math.min(currentImage.width, currentImage.height);
+    const offsetX = (currentImage.width - imageSize) / 2;
+    const offsetY = (currentImage.height - imageSize) / 2;
+    
+    const pieceSrcSize = imageSize / GRID_SIZE;
+    
     for (let y = 0; y < GRID_SIZE; y++) {
         for (let x = 0; x < GRID_SIZE; x++) {
             const index = y * GRID_SIZE + x;
             const pieceIndex = puzzlePieces[index];
             
             if (pieceIndex === PIECES - 1) {
-                ctx.fillStyle = '#f0f0f0';
+                ctx.fillStyle = '#f5f5f5';
                 ctx.fillRect(x * PIECES_SIZE, y * PIECES_SIZE, PIECES_SIZE, PIECES_SIZE);
-                ctx.fillStyle = '#ccc';
-                ctx.font = 'bold 20px Arial';
-                ctx.textAlign = 'center';
-                ctx.textBaseline = 'middle';
-                ctx.fillText('✕', x * PIECES_SIZE + PIECES_SIZE/2, y * PIECES_SIZE + PIECES_SIZE/2);
+                ctx.strokeStyle = '#ddd';
+                ctx.lineWidth = 1;
+                ctx.setLineDash([4, 4]);
+                ctx.strokeRect(x * PIECES_SIZE + 2, y * PIECES_SIZE + 2, PIECES_SIZE - 4, PIECES_SIZE - 4);
+                ctx.setLineDash([]);
             } else {
-                const originalX = (pieceIndex % GRID_SIZE) * PIECES_SIZE;
-                const originalY = Math.floor(pieceIndex / GRID_SIZE) * PIECES_SIZE;
+                const originalX = offsetX + (pieceIndex % GRID_SIZE) * pieceSrcSize;
+                const originalY = offsetY + Math.floor(pieceIndex / GRID_SIZE) * pieceSrcSize;
                 
                 ctx.drawImage(
                     currentImage,
-                    originalX, originalY, PIECES_SIZE, PIECES_SIZE,
+                    originalX, originalY, pieceSrcSize, pieceSrcSize,
                     x * PIECES_SIZE, y * PIECES_SIZE, PIECES_SIZE, PIECES_SIZE
                 );
                 
@@ -362,6 +370,26 @@ function solvePuzzle() {
     showWinMessage();
 }
 
+function handleFileUpload(e) {
+    const file = e.target.files[0];
+    if (!file) return;
+    
+    const reader = new FileReader();
+    reader.onload = function(event) {
+        const imageDataUrl = event.target.result;
+        customImages.push(imageDataUrl);
+        images.push(imageDataUrl);
+        
+        currentLevel = images.length - 1;
+        loadLevel(currentLevel);
+        
+        document.getElementById('file-upload').value = '';
+        
+        alert('图片上传成功！现在可以开始新的拼图关卡。');
+    };
+    reader.readAsDataURL(file);
+}
+
 function startTimer() {
     if (timerInterval) {
         clearInterval(timerInterval);
@@ -391,6 +419,7 @@ function getElapsedTime() {
 
 function updateUI() {
     document.getElementById('current-level').textContent = currentLevel + 1;
+    document.querySelector('.level-info').innerHTML = `第 <span id="current-level">${currentLevel + 1}</span> / ${images.length} 关`;
     document.getElementById('steps').textContent = steps;
     document.getElementById('best').textContent = bestScores[currentLevel] ? `${bestScores[currentLevel]}步` : '--';
 }
