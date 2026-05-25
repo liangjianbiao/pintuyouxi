@@ -45,7 +45,7 @@ function setupEventListeners() {
     canvas.addEventListener('mouseleave', handleMouseUp);
     
     canvas.addEventListener('touchstart', handleTouchStart, { passive: true });
-    canvas.addEventListener('touchmove', handleTouchMove, { passive: true });
+    canvas.addEventListener('touchmove', handleTouchMove, { passive: false });
     canvas.addEventListener('touchend', handleTouchEnd, { passive: true });
     
     document.getElementById('btn-shuffle').addEventListener('click', shufflePuzzle);
@@ -138,6 +138,8 @@ function handleTouchStart(e) {
 }
 
 function handleTouchMove(e) {
+    e.preventDefault();
+    
     if (!isDragging) return;
     
     const touch = e.touches[0];
